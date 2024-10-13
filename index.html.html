@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Registration</title>
+</head>
+<body>
+    <h1>Register Here</h1>
+    <form id="userForm">
+        <label for="fullName">Full Name:</label>
+        <input type="text" id="fullName" required><br><br>
+        
+        <label for="userEmail">Email Address:</label>
+        <input type="email" id="userEmail" required><br><br>
+        
+        <label for="userPass">Create Password:</label>
+        <input type="password" id="userPass" required><br><br>
+        
+        <label for="birthDate">Birthdate:</label>
+        <input type="date" id="birthDate" required><br><br>
+        
+        <label for="acceptTerms">
+            <input type="checkbox" id="acceptTerms" required>
+            I agree to the terms and conditions
+        </label><br><br>
+        
+        <button type="submit">Register</button>
+    </form>
+
+    <h2>List of Registered Users</h2>
+    <table id="userList">
+        <thead>
+            <tr>
+                <th>Full Name</th>
+                <th>Email</th>
+                <th>Password</th>
+                <th>Birthdate</th>
+                <th>Accepted Terms?</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script src="registration-form-js.js"></script>
+</body>
+</html>
