@@ -1,66 +1,45 @@
+const form = document.getElementById("user-form");
+const table = document.getElementById("user-table").getElementsByTagName('tbody')[0];
 document.addEventListener('DOMContentLoaded', () => {
-    const registrationForm = document.getElementById('userForm');
-    const userTableBody = document.getElementById('userList').getElementsByTagName('tbody')[0];
-    retrieveSavedUsers();
-
-    registrationForm.addEventListener('submit', (event) => {
-        event.preventDefault();
-
-        const userName = document.getElementById('fullName').value;
-        const userEmail = document.getElementById('userEmail').value;
-        const userPassword = document.getElementById('userPass').value;
-        const userBirthdate = document.getElementById('birthDate').value;
-        const hasAcceptedTerms = document.getElementById('acceptTerms').checked;
-
-        
-        const userAge = getAge(userBirthdate);
-        if (userAge < 18 || userAge > 55) {
-            alert('Registration is only allowed for users between 18 and 55 years old.');
-            return;
-        }
-
-        
-        storeUser(userName, userEmail, userPassword, userBirthdate, hasAcceptedTerms);
-
-        
-        append(userName, userEmail, userPassword, userBirthdate, hasAcceptedTerms);
-
-        
-        registrationForm.reset();
-    });
-
-    function getAge(birthDateString) {
-        const currentDate = new Date();
-        const birthDate = new Date(birthDateString);
-        let age = currentDate.getFullYear() - birthDate.getFullYear();
-        const monthOffset = currentDate.getMonth() - birthDate.getMonth();
-        if (monthOffset < 0 || (monthOffset === 0 && currentDate.getDate() < birthDate.getDate())) {
-            age--;
-        }
-        return age;
-    }
-
-    function storeUser(fullName, email, password, dob, acceptedTerms) {
-        const storedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-        storedUsers.push({ fullName, email, password, dob, acceptedTerms });
-        localStorage.setItem('registeredUsers', JSON.stringify(storedUsers));
-    }
-
-    function retrieveSavedUsers() {
-        const savedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
-        savedUsers.forEach(user => {
-            appendToUserTable(user.fullName, user.email, user.password, user.dob, user.acceptedTerms);
-        });
-    }
-
-    function append(fullName, email, password, dob, acceptedTerms) {
-        const row = userTableBody.insertRow();
-        row.innerHTML = `
-            <td>${fullName}</td>
-            <td>${email}</td>
-            <td>${password}</td>
-            <td>${dob}</td>
-            <td>${acceptedTerms ? 'Yes' : 'No'}</td>
-        `;
-    }
+    const entries = JSON.parse(localStorage.getItem('entries')) || [];
+    entries.forEach(entry => addEntryToTable(entry));
 });
+form.addEventListener('submit', function(e) {
+    e.preventDefault();
+    const name = document.getElementById('name').value;
+    const email = document.getElementById('email').value;
+    const password = document.getElementById('password').value;
+    const dob = document.getElementById('dob').value;
+    const terms = document.getElementById('terms').checked;
+    const age = calculateAge(dob);
+    if (age < 18 || age > 55) {
+        alert('You must be between 18 and 55 years old to register.');
+        return;
+    }
+    const entry = { name, email, password, dob, terms };
+    addEntryToTable(entry);
+    saveEntryToLocalStorage(entry);
+    form.reset();
+});
+function calculateAge(dob) {
+    const today = new Date();
+    const birthDate = new Date(dob);
+    let age = today.getFullYear() - birthDate.getFullYear();
+    const monthDiff = today.getMonth() - birthDate.getMonth();
+    if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+        age--;
+    }
+    return age;
+}
+function addEntryToTable(entry) {
+    const row = table.insertRow();
+    Object.values(entry).forEach(value => {
+        const cell = row.insertCell();
+        cell.textContent = value;
+    });
+}
+function saveEntryToLocalStorage(entry) {
+    const entries = JSON.parse(localStorage.getItem('entries')) || [];
+    entries.push(entry);
+    localStorage.setItem('entries', JSON.stringify(entries));
+}
