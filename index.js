@@ -1,8 +1,6 @@
 document.addEventListener('DOMContentLoaded', () => {
     const registrationForm = document.getElementById('userForm');
     const userTableBody = document.getElementById('userList').getElementsByTagName('tbody')[0];
-
-    // Load previously stored users
     retrieveSavedUsers();
 
     registrationForm.addEventListener('submit', (event) => {
@@ -14,24 +12,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const userBirthdate = document.getElementById('birthDate').value;
         const hasAcceptedTerms = document.getElementById('acceptTerms').checked;
 
-        // Check if user is within the valid age range (18-55)
-        const userAge = getUserAge(userBirthdate);
+        
+        const userAge = getAge(userBirthdate);
         if (userAge < 18 || userAge > 55) {
             alert('Registration is only allowed for users between 18 and 55 years old.');
             return;
         }
 
-        // Store user data locally
-        storeUserData(userName, userEmail, userPassword, userBirthdate, hasAcceptedTerms);
+        
+        storeUser(userName, userEmail, userPassword, userBirthdate, hasAcceptedTerms);
 
-        // Display the new user in the table
-        appendToUserTable(userName, userEmail, userPassword, userBirthdate, hasAcceptedTerms);
+        
+        append(userName, userEmail, userPassword, userBirthdate, hasAcceptedTerms);
 
-        // Reset the form after submission
+        
         registrationForm.reset();
     });
 
-    function getUserAge(birthDateString) {
+    function getAge(birthDateString) {
         const currentDate = new Date();
         const birthDate = new Date(birthDateString);
         let age = currentDate.getFullYear() - birthDate.getFullYear();
@@ -42,7 +40,7 @@ document.addEventListener('DOMContentLoaded', () => {
         return age;
     }
 
-    function storeUserData(fullName, email, password, dob, acceptedTerms) {
+    function storeUser(fullName, email, password, dob, acceptedTerms) {
         const storedUsers = JSON.parse(localStorage.getItem('registeredUsers') || '[]');
         storedUsers.push({ fullName, email, password, dob, acceptedTerms });
         localStorage.setItem('registeredUsers', JSON.stringify(storedUsers));
@@ -55,7 +53,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function appendToUserTable(fullName, email, password, dob, acceptedTerms) {
+    function append(fullName, email, password, dob, acceptedTerms) {
         const row = userTableBody.insertRow();
         row.innerHTML = `
             <td>${fullName}</td>
